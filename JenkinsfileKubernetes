@@ -1,7 +1,7 @@
 node{
      
     stage('SCM Checkout'){
-        git url:  'https://github.com/prakashk0301/spring-boot-mongo-docker.git',branch: 'master'
+        git url:  'https://github.com/git-hardy/spring-boot-mongo-docker.git',branch: 'master'
     }
     
     stage(" Maven Clean Package"){
@@ -13,15 +13,15 @@ node{
     
     
     stage('Build Docker Image'){
-        sh 'docker rmi -f pkw0301/spring-boot-mongo'
-        sh 'docker build -t pkw0301/spring-boot-mongo .'
+        sh 'docker rmi -f git-hardy/spring-boot-mongo'
+        sh 'docker build -t git-hardy/spring-boot-mongo .'
     }
     
     stage('Push Docker Image'){
-        withCredentials([string(credentialsId: 'DOKCER_HUB_PASSWORD', variable: 'DOKCER_HUB_PASSWORD')]) {
-          sh "docker login -u pkw0301 -p ${DOKCER_HUB_PASSWORD}"
+        withCredentials([usernamePassword(credentialsId: 'GIT_CRED', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
+          sh "docker login -u ${GIT_USER} -p ${GIT_PASS}"
         }
-        sh 'docker push pkw0301/spring-boot-mongo'
+        sh 'docker push git-hardy/spring-boot-mongo'
      }
      
      
